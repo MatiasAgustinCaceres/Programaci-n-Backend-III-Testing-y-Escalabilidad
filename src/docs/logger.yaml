@@ -1,0 +1,16 @@
+tags:
+  - name: Logger
+    description: Endpoint de validación de logs (no funcionalidad de negocio)
+
+paths:
+  /api/logger/test:
+    get:
+      summary: Probar generación de logs en todos los niveles
+      tags: [Logger]
+      responses:
+        '200':
+          description: Logs generados correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'

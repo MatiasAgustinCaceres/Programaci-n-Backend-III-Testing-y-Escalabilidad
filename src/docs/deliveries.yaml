@@ -1,0 +1,132 @@
+tags:
+  - name: Deliveries
+    description: Endpoints de gestión de entregas
+
+paths:
+  /api/deliveries:
+    get:
+      summary: Listar entregas
+      tags: [Deliveries]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: Número de página (por defecto 1)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+          description: Cantidad de resultados por página (por defecto 20)
+      responses:
+        '200':
+          description: Lista de entregas paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Delivery'
+    post:
+      summary: Crear entrega
+      tags: [Deliveries]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+      responses:
+        '201':
+          description: Entrega creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+
+  /api/deliveries/{id}/status:
+    put:
+      summary: Actualizar estado de entrega
+      tags: [Deliveries]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  enum: [pendiente, en_proceso, entregado]
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+        '400':
+          description: Estado inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/deliveries/{id}/proof:
+    post:
+      summary: Subir comprobante de entrega
+      tags: [Deliveries]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+          description: ID de la entrega
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Archivo de comprobante
+                docType:
+                  type: string
+                  description: Tipo de comprobante (ej. comprobante_entrega)
+      responses:
+        '200':
+          description: Comprobante subido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileMetadata'
+        '400':
+          description: Error de archivo requerido, tipo inválido o tamaño superado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Entrega no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

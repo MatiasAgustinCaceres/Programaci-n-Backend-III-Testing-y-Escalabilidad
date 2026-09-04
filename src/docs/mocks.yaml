@@ -1,0 +1,62 @@
+tags:
+  - name: Mocks
+    description: Endpoints para generar datos de prueba
+
+paths:
+  /api/mocks/users:
+    get:
+      summary: Obtener usuarios mock
+      tags: [Mocks]
+      responses:
+        '200':
+          description: Lista de usuarios mock
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /api/mocks/orders:
+    post:
+      summary: Generar pedidos mock
+      tags: [Mocks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cantidad:
+                  type: integer
+                  minimum: 1
+      responses:
+        '201':
+          description: Pedidos mock generados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: Cantidad inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/mocks/products:
+    get:
+      summary: Obtener productos mock
+      tags: [Mocks]
+      responses:
+        '200':
+          description: Lista de productos mock
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'

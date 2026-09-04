@@ -1,0 +1,30 @@
+tags:
+  - name: Health
+    description: Endpoint de verificación de estado de la API
+
+paths:
+  /api/health:
+    get:
+      summary: Health check de la API
+      tags: [Health]
+      responses:
+        '200':
+          description: Estado de la API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  env:
+                    type: string
+                    example: development
+                  uptime:
+                    type: number
+                    example: 123.45
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: 2026-09-04T14:08:00Z

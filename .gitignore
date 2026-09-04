@@ -1,0 +1,16 @@
+# Variables de entorno
+.env
+
+# Dependencias
+node_modules/
+
+# Logs generados por Winston
+logs/
+errors.log
+*.log
+
+# Archivos subidos por Multer
+uploads/
+
+# Cobertura de tests (opcional)
+coverage/
