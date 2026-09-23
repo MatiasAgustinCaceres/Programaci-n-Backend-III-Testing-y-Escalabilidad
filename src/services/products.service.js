@@ -4,10 +4,10 @@ import { productsRepository } from '../repositories/products.repository.js'
 import logger from '../config/logger.js'
 
 export const productsService = {
-  getAvailableProducts: async () => {
+  getAvailableProducts: async (page = 1, limit = 20) => {
     try {
-      const products = await productsRepository.getAll()
-      logger.info(`Se obtuvieron ${products.length} productos`)
+      const products = await productsRepository.getAll(page, limit)
+      logger.info(`Se obtuvieron ${products.length} productos (page=${page}, limit=${limit})`)
       return products
     } catch (error) {
       logger.error(`Error al obtener productos: ${error.message}`)
@@ -28,7 +28,7 @@ export const productsService = {
 
   getProductById: async (id) => {
     try {
-      const product = await productsRepository.getById(id)
+      const product = await productsRepository.getProductById ? await productsRepository.getProductById(id) : await productsRepository.getById(id)
       if (!product) {
         logger.warning(`Producto no encontrado con id: ${id}`)
         throw CustomError.createError(errorDictionary.PRODUCT_NOT_FOUND) // 404

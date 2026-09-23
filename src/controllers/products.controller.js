@@ -4,7 +4,8 @@ import { errorDictionary } from '../middlewares/errorDictionary.js'
 
 export const getProducts = async (req, res, next) => {
   try {
-    const products = await productsService.getAvailableProducts()
+    const { page = 1, limit = 20 } = req.query
+    const products = await productsService.getAvailableProducts(Number(page), Number(limit))
     res.status(200).json({ status: 'success', payload: products })
   } catch (error) {
     next(error)
