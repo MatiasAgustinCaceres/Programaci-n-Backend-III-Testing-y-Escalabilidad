@@ -2,19 +2,12 @@ import { expect } from 'chai'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import app from '../app.js'
-import { config } from '../config/env.config.js'
 
 describe('Orders API', () => {
-  before(async () => {
-    await mongoose.connect(config.mongoUri)
-  })
-
   beforeEach(async () => {
-    await mongoose.connection.collection('orders').deleteMany({})
-  })
-
-  after(async () => {
-    await mongoose.connection.close()
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.collection('orders').deleteMany({})
+    }
   })
 
   it('POST /api/orders debe crear un pedido válido', async () => {
@@ -33,7 +26,7 @@ describe('Orders API', () => {
   })
 
   it('GET /api/orders/:id con ID inexistente debe devolver 404', async () => {
-    const fakeId = new mongoose.Types.ObjectId() // ID válido pero no existente
+    const fakeId = new mongoose.Types.ObjectId()
     const res = await request(app).get(`/api/orders/${fakeId}`)
     expect(res.status).to.equal(404)
     expect(res.body).to.have.property('status', 'error')

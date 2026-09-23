@@ -2,32 +2,22 @@ import { expect } from 'chai'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import app from '../app.js'
-import { config } from '../config/env.config.js'
 
 describe('Deliveries API', () => {
-  before(async () => {
-    await mongoose.connect(config.mongoUri)
-  })
-
   beforeEach(async () => {
-    await mongoose.connection.collection('deliveries').deleteMany({})
-  })
-
-  after(async () => {
-    await mongoose.connection.close()
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.collection('deliveries').deleteMany({})
+    }
   })
 
   it('PUT /api/deliveries/:id/status debe actualizar status válido', async () => {
-    // Crear IDs válidos de prueba
     const orderId = new mongoose.Types.ObjectId()
     const driverId = new mongoose.Types.ObjectId()
 
-    // Crear una entrega válida
     const created = await request(app)
       .post('/api/deliveries')
       .send({ orderId, driverId, status: 'pendiente' })
 
-    // Actualizar status
     const res = await request(app)
       .put(`/api/deliveries/${created.body.payload._id}/status`)
       .send({ status: 'entregado' })

@@ -1,26 +1,13 @@
-import dotenv from 'dotenv'
 import { expect } from 'chai'
 import supertest from 'supertest'
 import mongoose from 'mongoose'
 import path from 'path'
 import app from '../app.js'
 
-// Cargar variables de entorno desde .env.test
-dotenv.config({ path: '.env.test' })
-
 const requester = supertest(app)
 
 describe('Uploads de archivos', function () {
   this.timeout(10000)
-
-  before(async () => {
-    console.log('MONGO_URI:', process.env.MONGO_URI)
-    await mongoose.connect(process.env.MONGO_URI)
-  })
-
-  after(async () => {
-    await mongoose.connection.close()
-  })
 
   // ---------- USERS ----------
   describe('POST /api/users/:id/documents', () => {

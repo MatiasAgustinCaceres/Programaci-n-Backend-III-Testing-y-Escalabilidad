@@ -1,5 +1,5 @@
-# Imagen base oficial de Node
-FROM node:18
+# Imagen base oficial de Node (versión 20 ligera)
+FROM node:20-alpine
 
 # Directorio de trabajo dentro del contenedor
 WORKDIR /app

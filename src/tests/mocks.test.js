@@ -2,22 +2,15 @@ import { expect } from 'chai'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import app from '../app.js'
-import { config } from '../config/env.config.js'
 
 describe('Mocks API', () => {
-  before(async () => {
-    await mongoose.connect(config.mongoUri)
-  })
-
   beforeEach(async () => {
-    await mongoose.connection.collection('users').deleteMany({})
-    await mongoose.connection.collection('orders').deleteMany({})
-    await mongoose.connection.collection('products').deleteMany({})
-    await mongoose.connection.collection('deliveries').deleteMany({})
-  })
-
-  after(async () => {
-    await mongoose.connection.close()
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.collection('users').deleteMany({})
+      await mongoose.connection.collection('orders').deleteMany({})
+      await mongoose.connection.collection('products').deleteMany({})
+      await mongoose.connection.collection('deliveries').deleteMany({})
+    }
   })
 
   it('GET /api/mocks/users debe devolver usuarios mock', async () => {
