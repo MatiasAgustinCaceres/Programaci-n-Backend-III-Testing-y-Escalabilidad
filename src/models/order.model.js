@@ -1,10 +1,16 @@
 import mongoose from 'mongoose'
 import { ORDER_STATUS } from '../constants/index.js'
 
+const documentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  reference: { type: String, required: true }
+}, { _id: false })
+
 const orderSchema = new mongoose.Schema({
   customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   status: { type: String, enum: Object.values(ORDER_STATUS), default: ORDER_STATUS.CREATED },
+  documents: { type: [documentSchema], default: [] },
   createdAt: { type: Date, default: Date.now }
 })
 

@@ -1,10 +1,18 @@
 import mongoose from 'mongoose'
-import { USER_ROLES } from '../constants/index.js'
+
+const documentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  reference: { type: String, required: true },
+  originalName: { type: String } // Se agrega este campo para que Mongoose no lo elimine
+}, { _id: true })
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  role: { type: String, enum: Object.values(USER_ROLES), default: USER_ROLES.CUSTOMER }
+  // ... resto de tus campos de usuario
+  documents: {
+    type: [documentSchema],
+    default: []
+  }
 })
 
-export default mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
+export default User

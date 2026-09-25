@@ -1,9 +1,11 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import { config } from '../config/env.config.js'
 
-// Cargar variables de entorno de test
+// 1. Cargar las variables de entorno de test PRIMERO
 dotenv.config({ path: '.env.test' })
+
+// 2. Importar la configuración DESPUÉS de haber cargado el .env.test
+import { config } from '../config/env.config.js'
 
 const MONGO_URI = process.env.MONGO_URI || config.mongoUri || 'mongodb://127.0.0.1:27017/shipnow_test'
 

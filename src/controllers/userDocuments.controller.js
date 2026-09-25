@@ -8,43 +8,41 @@ export const uploadUserDocument = async (req, res, next) => {
     const { id } = req.params
     const { file } = req
 
-    // Validación: archivo requerido
     if (!file) {
       throw CustomError.createError(errorDictionary.FILE_REQUIRED)
     }
 
-    // Validación: tipos permitidos
     const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg']
     if (!allowedTypes.includes(file.mimetype)) {
       throw CustomError.createError(errorDictionary.INVALID_TYPE)
     }
 
-    // Buscar usuario
     const user = await User.findById(id)
     if (!user) {
       throw CustomError.createError(errorDictionary.USER_NOT_FOUND)
     }
 
-    // Guardar documento en el usuario
+    const fileName = file.originalname || file.filename
+    const fileRef = file.path || `uploads/${file.filename}`
+
     user.documents = user.documents || []
     user.documents.push({
-      docType: req.body.docType,
-      originalName: file.originalname,
-      mimeType: file.mimetype,
-      path: file.path
+      name: fileName,
+      originalName: fileName,
+      reference: fileRef
     })
+
     await user.save()
 
     logger.info(`Documento cargado correctamente para usuario ${id}`)
 
-    // Respuesta exitosa
     return res.status(200).json({
       status: 'success',
       payload: user.documents.at(-1)
     })
   } catch (error) {
     logger.error(
-      `${error.name} - ${error.message} - POST /api/users/${req.params.id}/documents`
+      `${error.name || 'Error'} - ${error.message} - POST /api/users/${req.params.id}/documents`
     )
     next(error)
   }
